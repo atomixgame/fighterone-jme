@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
+
+    <useStyles filename="nifty-default-styles.xml" />
+    <useControls filename="nifty-default-controls.xml" />
+
+    <screen id="start" controller="sg.lastblood.gui.GuiManager">
+        <layer childLayout="center" >
+            <panel childLayout="absolute" visibleToMouse="true" >
+			
+                <image filename="Interface/Screens/menu/newgame.png" x="40%" y="20%"  height="10%" width="20%" >
+                    <interact onClick="newGame()"/>
+                    <effect >
+                        <onHover       name="imageSize" startSize="1" endSize="1.2" />
+                    </effect>
+                </image>
+			
+                <image filename="Interface/Screens/menu/network.png" x="40%" y="35%"  height="10%" width="20%" >
+                    <interact onClick="gotoNetwork()"/>
+                    <effect >
+                        <onHover       name="imageSize" startSize="1" endSize="1.2" />
+                    </effect>
+                </image>
+
+                <image filename="Interface/Screens/menu/option.png" x="40%" y="50%"  height="10%" width="20%" >
+                    <interact onClick="gotoOption()"/>
+                    <effect >
+                        <onHover       name="imageSize" startSize="1" endSize="1.2" />
+                    </effect>
+                </image>
+				
+                <image align="center" filename="Interface/Screens/menu/exitgame.png" x="40%" y="65%" height="10%" width="20%" >
+                    <interact onClick="exitGame()" />
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+				
+            </panel>
+        </layer>
+    </screen>
+
+    <screen id="option" controller="sg.lastblood.gui.GuiManager">
+        <layer childLayout="center">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+			
+                <image filename="Interface/Screens/menu/control.png" align="center" valign="center" x="40%" y="30%" height="10%" width="20%">
+                    <interact 				onClick="gotoControl()"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+
+            </panel>
+        </layer>
+    </screen>
+
+
+    <screen id="control" controller="sg.lastblood.gui.GuiManager" defaultFocusElement="0" >
+        <layer childLayout="absolute" >
+ 
+            <panel childLayout="vertical" visibleToMouse="true" style="nifty-panel" align="left" backgroundColor="#f000" width="50%" y="50" >
+                <control id="0" name="button" label="Left" x="" y=""  visibleToMouse="true"  width="45%"/>
+                <control id="1" name="button" label="Right" x="" y="" visibleToMouse="true"	 width="45%" />
+                <control id="2" name="button" label="Up" x="" y="" 	visibleToMouse="true"  width="45%"/>
+                <control id="3" name="button" label="Down" x="" y="" 	visibleToMouse="true" width="45%"/>
+                <control id="4" name="button" label="Left Pucnh" x="" y="" 	visibleToMouse="true" width="45%"/>
+                <control id="5" name="button" label="Right Punch" x="" y="" 	visibleToMouse="true" width="45%"/>
+                <control id="6" name="button" label="Left Kick" x="" y="" 	visibleToMouse="true" width="45%"/>
+                <control id="7" name="button" label="Right Kick" x="" y="" 	visibleToMouse="true" width="45%"/>
+                <control id="8" name="button" label="def" x="" y="" 	visibleToMouse="true" width="45%"/>
+                <control id="9" name="button" label="Side-step" x="" y="" 	visibleToMouse="true" width="45%"/>
+            </panel>
+            <panel childLayout="vertical" visibleToMouse="true" style="nifty-panel" align="right" backgroundColor="#00f0" width="50%" y="50" x="50%">
+                <control id="10" name="button" label="Left" x="" y="" align="right"	visibleToMouse="true" width="45%"/>
+                <control id="11" name="button" label="Right" x="" y="" align="right"	 	visibleToMouse="true" width="45%"/>
+                <control id="12" name="button" label="Up" x="" y="" align="right"	 	visibleToMouse="true" width="45%"/>
+                <control id="13" name="button" label="Down" x="" y="" align="right"	 	visibleToMouse="true" width="45%"/>
+                <control id="14" name="button" label="Left Pucnh" x="" y="" align="right"	 	visibleToMouse="true" width="45%"/>
+                <control id="15" name="button" label="Right Punch" x="" y="" align="right"	 	visibleToMouse="true" width="45%"/>
+                <control id="16" name="button" label="Left Kick" x="" y="" align="right"	 	visibleToMouse="true" width="45%"/>
+                <control id="17" name="button" label="Right Kick" x="" y="" align="right"	 	visibleToMouse="true" width="45%"/>
+                <control id="18" name="button" label="def" x="" y="" align="right"	 	visibleToMouse="true" width="45%"/>
+                <control id="19" name="button" label="Side-step" x="" y="" align="right"	 	visibleToMouse="true" width="45%"/>
+            </panel> 
+            <panel childLayout="absolute" visibleToMouse="true" style="nifty-panel" align="center" backgroundColor="#f000" width="100%" height="20%" y="70%" >
+                <control id="save" name="button" label="Save" 	x="50%" y="60%" width="20%"	 	visibleToMouse="true"/>
+                <control id="reset" name="button" label="Reset" x="75%" y="60%" width="20%"	 	visibleToMouse="true"/>
+            </panel>
+			
+        </layer>
+    </screen>
+
+    <screen id="network" controller="sg.lastblood.gui.GuiManager" >
+        <layer childLayout="center" >
+            <panel childLayout="vertical" align="center" style="nifty-panel" valign="center" visibleToMouse="true" width="50%">
+                <control id="networkIpLabel" name="label" text="Your IP:192.168.xxx.xxx" 	width="100%" align="center"></control>
+                <control id="networkCreateHost" name="button" label="Waiting for Opponent" width="100%" align="center" visibleToMouse="true"></control>
+                <control id="networkConnectToHost" name="button" label="Connect to Opponent" width="100%" align="center" visibleToMouse="true"></control>
+                <panel childLayout="horizontal">
+                    <control id="networkIpInput1" name="textfield" maxLength ="3"  visibleToMouse="true" width="25%" align="center"></control>	
+                    <control id="networkIpInput2" name="textfield" maxLength ="3"  visibleToMouse="true" width="25%" align="center"></control>
+                    <control id="networkIpInput3" name="textfield" maxLength ="3"  visibleToMouse="true" width="25%" align="center"></control>
+                    <control id="networkIpInput4" name="textfield" maxLength ="3"  visibleToMouse="true" width="25%" align="center"></control>
+                </panel>
+                <control id="networkStatus" name="label" text="Status: Not connected"  visibleToMouse="true" width="100%" align="center"></control>
+                <control id="networkCancel" name="button" label="Cancel" visibleToMouse="true" width="100%" align="center"></control>
+            </panel>
+        </layer>
+    </screen>
+
+
+    <screen id="first" controller="sg.lastblood.gui.GuiManager">
+        <layer childLayout="center" backgroundColor="#1110">
+            
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <text x="10%" y ="5%" height="10%" width="80%" id="text" font="aurulent-sans-16.fnt" size="10" color="#ffff" text="Choose player 1" align="center" valign="center" />
+
+                <image id="avatarofp1" filename="Interface/Screens/menu/probe.png" align="center" valign="center" x="10%" y="10%" height="100%w" width="35%">
+                    <interact onClick=""/> 	
+                </image>
+                <image id="avatarofp2" filename="Interface/Screens/menu/probe.png" align="center" valign="center" x="55%" y="10%" height="100%w" width="35%">
+                    <interact onClick=""/> 	
+                </image>
+            </panel>
+        </layer>
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="10%" y="60%" height="10%" width="10%">
+                    <interact onClick="setp1choosep2(sixth)" onMouseOver="changeImage1(sixth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="33%" y="60%" height="10%" width="10%">
+                    <interact onClick="setp1choosep2(seventh)" onMouseOver="changeImage1(seventh)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="56%" y="60%" height="10%" width="10%">
+                    <interact onClick="setp1choosep2(eighth)" onMouseOver="changeImage1(eighth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="79%" y="60%" height="10%" width="10%">
+                    <interact onClick="setp1choosep2(sixth)" onMouseOver="changeImage1(sixth)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <text x="10%" y ="5%" height="10%" width="80%" id="text" font="aurulent-sans-16.fnt" size="10" color="#ffff" text="Choose player 1" align="center" valign="center" />
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="10%" y="75%" height="10%" width="10%">
+                    <interact onClick="setp1choosep2(sixth)" onMouseOver="changeImage1(sixth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="33%" y="75%" height="10%" width="10%">
+                    <interact onClick="setp1choosep2(sixth)" onMouseOver="changeImage1(sixth)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="56%" y="75%" height="10%" width="10%">
+                    <interact onClick="setp1choosep2(sixth)" onMouseOver="changeImage1(sixth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="79%" y="75%" height="10%" width="10%">
+                    <interact onClick="setp1choosep2(sixth)" onMouseOver="changeImage1(sixth)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+    </screen>
+
+    <screen id="second" controller="sg.lastblood.gui.GuiManager">
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image id="avatarofp1" filename="Interface/Screens/menu/probe.png" align="center" valign="center" x="10%" y="10%" height="100%w" width="35%">
+                    <interact onClick=""/> 	
+                </image>
+                <image id="avatarofp2" filename="Interface/Screens/menu/probe.png" align="center" valign="center" x="55%" y="10%" height="100%w" width="35%">
+                    <interact onClick=""/> 	
+                </image>
+            </panel>
+        </layer>
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="10%" y="60%" height="10%" width="10%">
+                    <interact onClick="setp2choosescene(sixth)" onMouseOver="changeImage2(sixth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="33%" y="60%" height="10%" width="10%">
+                    <interact onClick="setp2choosescene(seventh)" onMouseOver="changeImage2(seventh)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="56%" y="60%" height="10%" width="10%">
+                    <interact onClick="setp2choosescene(eighth)" onMouseOver="changeImage2(eighth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="79%" y="60%" height="10%" width="10%">
+                    <interact onClick="setp2choosescene(sixth)" onMouseOver="changeImage2(sixth)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="10%" y="75%" height="10%" width="10%">
+                    <interact onClick="setp2choosescene(sixth)" onMouseOver="changeImage2(sixth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="33%" y="75%" height="10%" width="10%">
+                    <interact onClick="setp2choosescene(sixth)" onMouseOver="changeImage2(sixth)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="56%" y="75%" height="10%" width="10%">
+                    <interact onClick="setp2choosescene(sixth)" onMouseOver="changeImage2(sixth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="79%" y="75%" height="10%" width="10%">
+                    <interact onClick="setp2choosescene(sixth)" onMouseOver="changeImage2(sixth)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+    </screen>
+
+
+
+    <screen id="choosesky" controller="sg.lastblood.gui.GuiManager">
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image id="sky" filename="Interface/Screens/menu/probe.png" align="center" valign="center" x="30%" y="10%" height="40%" width="40%">
+                    <interact onClick=""/> 	
+                </image>
+            </panel>
+        </layer>
+			
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Textures/Levels/sky/darksky.png" align="center" valign="center" x="10%" y="65%" height="10%" width="10%">
+                    <interact onClick="setSky(darksky)" onMouseOver="changeSkyImage(darksky)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/sky/sky.png" align="center" valign="center" x="33%" y="65%" height="10%" width="10%">
+                    <interact onClick="setSky(sky)" onMouseOver="changeSkyImage(sky)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Textures/Levels/sky/sky2.png" align="center" valign="center" x="56%" y="65%" height="10%" width="10%">
+                    <interact onClick="setSky(sky2)" onMouseOver="changeSkyImage(sky2)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/sky/green.png" align="center" valign="center" x="79%" y="65%" height="10%" width="10%">
+                    <interact onClick="setSky(green)" onMouseOver="changeSkyImage(green)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+			
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Textures/Levels/sky/moonsky.png" align="center" valign="center" x="10%" y="80%" height="10%" width="10%">
+                    <interact onClick="setSky(moonsky)" onMouseOver="changeSkyImage(moonsky)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/sky/sky3.png" align="center" valign="center" x="33%" y="80%" height="10%" width="10%">
+                    <interact onClick="setSky(sky3)" onMouseOver="changeSkyImage(sky3)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Textures/Levels/sky/sky4.png" align="center" valign="center" x="56%" y="80%" height="10%" width="10%">
+                    <interact onClick="setSky(sky4)" onMouseOver="changeSkyImage(sky4)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/sky/spheresky.png" align="center" valign="center" x="79%" y="80%" height="10%" width="10%">
+                    <interact onClick="setSky(spheresky)" onMouseOver="changeSkyImage(spheresky)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+			
+    </screen>
+
+    <screen id="chooseearth" controller="sg.lastblood.gui.GuiManager">
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image id="earth" filename="Interface/Screens/menu/probe.png" align="center" valign="center" x="30%" y="10%" height="40%" width="40%">
+                    <interact onClick=""/> 	
+                </image>
+            </panel>
+        </layer>
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Textures/Levels/earth/720.png" align="center" valign="center" x="10%" y="65%" height="10%" width="10%">
+                    <interact onClick="setEarth(720)" onMouseOver="changeEarthImage(720)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/earth/water.png" align="center" valign="center" x="33%" y="65%" height="10%" width="10%">
+                    <interact onClick="setEarth(water)" onMouseOver="changeEarthImage(water)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Textures/Levels/earth/fire.png" align="center" valign="center" x="56%" y="65%" height="10%" width="10%">
+                    <interact onClick="setEarth(fire)" onMouseOver="changeEarthImage(fire)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/earth/water2.png" align="center" valign="center" x="79%" y="65%" height="10%" width="10%">
+                    <interact onClick="setEarth(water2)" onMouseOver="changeEarthImage(water2)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+			
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Textures/Levels/earth/bluefire.png" align="center" valign="center" x="10%" y="80%" height="10%" width="10%">
+                    <interact onClick="setEarth(bluefire)" onMouseOver="changeEarthImage(bluefire)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/earth/bluefire2.png" align="center" valign="center" x="33%" y="80%" height="10%" width="10%">
+                    <interact onClick="setEarth(bluefire2)" onMouseOver="changeEarthImage(bluefire2)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Textures/Levels/earth/bluefire3.png" align="center" valign="center" x="56%" y="80%" height="10%" width="10%">
+                    <interact onClick="setEarth(bluefire3)" onMouseOver="changeEarthImage(bluefire3)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/sky/spheresky.png" align="center" valign="center" x="79%" y="80%" height="10%" width="10%">
+                    <interact onClick="setEarth(spheresky)" onMouseOver="changeEarthImage(spheresky)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+			
+    </screen>
+
+
+    <screen id="loading" controller="sg.lastblood.gui.GuiManager">
+        <layer childLayout="center"	backgroundColor="#111f">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image id="p1" filename="Interface/Screens/menu/probe.png" align="center" valign="center" x="10%" y="15%" height="100%w" width="35%">
+                    <interact onClick=""/> 	
+                </image>
+                <image filename="Interface/Screens/menu/vs.png" align="center" valign="center" x="45%" y="40%" height="10%" width="10%">
+                    <interact onClick=""/> 	
+                </image>
+                <image id="p2" filename="Interface/Screens/menu/probe.png" align="center" valign="center" x="55%" y="15%" height="100%w" width="35%">
+                    <interact onClick=""/> 	
+                </image>					
+            </panel>
+        </layer>
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Interface/Screens/menu/loading.png" align="center" valign="center" x="25%" y="65%" height="10%" width="50%">
+                    <interact onClick="startGame()"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+            </panel>
+        </layer>
+    </screen>
+
+    <screen id="ingame" controller="sg.lastblood.gui.GuiManager">
+        <layer childLayout="center">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+			
+            </panel>
+        </layer>
+    </screen>
+
+    <screen id="menu" controller="sg.lastblood.gui.GuiManager">
+        <layer childLayout="center" backgroundColor="#111d">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+			
+                <image filename="Interface/Screens/menu/resumegame.png" align="center" valign="center" x="40%" y="30%" height="10%" width="20%">
+                    <interact onClick="resume()"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Screens/menu/restartgame.png" align="center" valign="center" x="40%" y="45%" height="10%" width="20%">
+                    <interact onClick="restart()"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Interface/Screens/menu/quitgame.png" align="center" valign="center" x="40%" y="60%" height="10%" width="20%">
+                    <interact onClick="exitGame()"/>
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+    </screen>
+
+    <!-- 
+    <screen id="newgame" controller="sg.lastblood.gui.GuiManager">
+<layer childLayout="center"	backgroundColor="#111d">
+<panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+<panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+<image filename="Interface/Screens/menu/single.png" align="center" valign="center" x="40%" y="30%" height="10%" width="20%"><interact onClick=""/> 	<effect><onHover name="imageSize" /></effect>	</image>
+<image filename="Interface/Screens/menu/local.png" align="center" valign="center" x="40%" y="45%" height="10%" width="20%"><interact onClick=""/> <effect><onHover name="imageSize" /></effect>		</image>
+<image filename="Interface/Screens/menu/multi.png" align="center" valign="center" x="40%" y="60%" height="10%" width="20%"><interact onClick=""/><effect><onHover name="imageSize" /></effect>		</image>
+</panel>
+</panel>
+</layer>
+    </screen>
+    -->
+
+    <!-- 
+    <screen id="empty" controller="sg.lastblood.gui.GuiManager"><layer childLayout="center">
+    <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+    <image id="healthbar1" filename="Interface/Screens/menu/healthbar1.png" x="0%" y="5%" height="5%" width="45%"/>
+    <image id="currentbar1" filename="Interface/Screens/menu/healthbar1.png" x="0%" y="5%" height="4%" width="44%"/>
+    </panel>
+    </layer>
+    <layer childLayout="center">
+    <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+    <image id="healthbar2" filename="Interface/Screens/menu/healthbar2.png" x="55%" y="5%" height="5%" width="45%"/>
+    <image id="currentbar2" filename="Interface/Screens/menu/healthbar2.png" x="55%" y="5%" height="4%" width="44%"/>
+    </panel>
+    </layer>
+    </screen>
+    -->
+
+
+</nifty>
+
+
+

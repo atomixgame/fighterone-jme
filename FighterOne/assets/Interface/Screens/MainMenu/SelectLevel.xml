@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- start screen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <screen id="CreateGameScreen" controller="sg.lastblood.ui.screens.LevelSelectUI">
+        <layer id="layer" backgroundColor="#003f" childLayout="center">
+            <panel id="panel" height="25%" width="35%" align="center" valign="center" backgroundColor="#f60f" childLayout="center" visibleToMouse="true">
+                <interact onClick="quit()"/>
+                <effect>
+                    <onStartScreen name="move" mode="in" direction="top" length="300" startDelay="0" inherit="true"/>
+                    <onEndScreen name="move" mode="out" direction="bottom" length="300" startDelay="0" inherit="true"/>
+                    <onHover name="pulsate" scaleFactor="0.008" startColor="#f600" endColor="#ffff" post="true"/>
+                </effect>
+                
+            </panel>
+        </layer>
+    </screen>
+    <screen id="SelectLevelScreen" controller="sg.lastblood.ui.screens.LevelSelectUI">
+        <layer id="layer" backgroundColor="#003f" childLayout="center">
+            <panel id="panel" height="25%" width="35%" align="center" valign="center" backgroundColor="#f60f" childLayout="center" visibleToMouse="true">
+                <interact onClick="quit()"/>
+                <effect>
+                    <onStartScreen name="move" mode="in" direction="top" length="300" startDelay="0" inherit="true"/>
+                    <onEndScreen name="move" mode="out" direction="bottom" length="300" startDelay="0" inherit="true"/>
+                    <onHover name="pulsate" scaleFactor="0.008" startColor="#f600" endColor="#ffff" post="true"/>
+                </effect>
+                
+            </panel>
+        </layer>
+    </screen>
+        <screen id="ChooseCharacter" controller="sg.lastblood.ui.screens.LevelSelectUI">
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image id="avatarofp1" filename="Interface/Images/Body/collection1/alisa.png" align="center" valign="center" x="10%" y="10%" height="100%w" width="35%">
+                    <interact onClick=""/> 	
+                </image>
+                <image id="avatarofp2" filename="Interface/Images/Body/collection1/christie.png" align="center" valign="center" x="55%" y="10%" height="100%w" width="35%">
+                    <interact onClick=""/> 	
+                </image>
+            </panel>
+        </layer>
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Interface/Images/Faces/Ttt2alisa.png" align="center" valign="center" x="10%" y="60%" height="10%" width="10%">
+                    <interact onClick="setChooseCharacter(sixth)" onMouseOver="changeImage2(sixth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Images/Faces/Ttt2baek.png" align="center" valign="center" x="33%" y="60%" height="10%" width="10%">
+                    <interact onClick="setChooseCharacter(seventh)" onMouseOver="changeImage2(seventh)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Interface/Images/Faces/Ttt2alisa.png" align="center" valign="center" x="56%" y="60%" height="10%" width="10%">
+                    <interact onClick="setChooseCharacter(eighth)" onMouseOver="changeImage2(eighth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Images/Faces/Ttt2alisa.png" align="center" valign="center" x="79%" y="60%" height="10%" width="10%">
+                    <interact onClick="setChooseCharacter(sixth)" onMouseOver="changeImage2(sixth)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Interface/Images/Faces/Ttt2alisa.png" align="center" valign="center" x="10%" y="75%" height="10%" width="10%">
+                    <interact onClick="setChooseCharacter(sixth)" onMouseOver="changeImage2(sixth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Images/Faces/Ttt2alisa.png" align="center" valign="center" x="33%" y="75%" height="10%" width="10%">
+                    <interact onClick="setChooseCharacter(sixth)" onMouseOver="changeImage2(sixth)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Interface/Images/Faces/Ttt2alisa.png" align="center" valign="center" x="56%" y="75%" height="10%" width="10%">
+                    <interact onClick="setChooseCharacter(sixth)" onMouseOver="changeImage2(sixth)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Interface/Images/Faces/Ttt2alisa.png" align="center" valign="center" x="79%" y="75%" height="10%" width="10%">
+                    <interact onClick="setChooseCharacter(sixth)" onMouseOver="changeImage2(sixth)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+    </screen>
+    <screen id="ChooseSkyScreen" controller="sg.lastblood.ui.screens.LevelSelectUI">
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image id="sky" filename="Interface/Screens/menu/probe.png" align="center" valign="center" x="30%" y="10%" height="40%" width="40%">
+                    <interact onClick=""/> 	
+                </image>
+            </panel>
+        </layer>
+			
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Textures/Levels/sky/darksky.png" align="center" valign="center" x="10%" y="65%" height="10%" width="10%">
+                    <interact onClick="setSky(darksky)" onMouseOver="changeSkyImage(darksky)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/sky/sky.png" align="center" valign="center" x="33%" y="65%" height="10%" width="10%">
+                    <interact onClick="setSky(sky)" onMouseOver="changeSkyImage(sky)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Textures/Levels/sky/sky2.png" align="center" valign="center" x="56%" y="65%" height="10%" width="10%">
+                    <interact onClick="setSky(sky2)" onMouseOver="changeSkyImage(sky2)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/sky/green.png" align="center" valign="center" x="79%" y="65%" height="10%" width="10%">
+                    <interact onClick="setSky(green)" onMouseOver="changeSkyImage(green)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+			
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Textures/Levels/sky/moonsky.png" align="center" valign="center" x="10%" y="80%" height="10%" width="10%">
+                    <interact onClick="setSky(moonsky)" onMouseOver="changeSkyImage(moonsky)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/sky/sky3.png" align="center" valign="center" x="33%" y="80%" height="10%" width="10%">
+                    <interact onClick="setSky(sky3)" onMouseOver="changeSkyImage(sky3)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Textures/Levels/sky/sky4.png" align="center" valign="center" x="56%" y="80%" height="10%" width="10%">
+                    <interact onClick="setSky(sky4)" onMouseOver="changeSkyImage(sky4)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/sky/spheresky.png" align="center" valign="center" x="79%" y="80%" height="10%" width="10%">
+                    <interact onClick="setSky(spheresky)" onMouseOver="changeSkyImage(spheresky)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+			
+    </screen>
+
+    <screen id="ChooseEarthScreen" controller="sg.lastblood.ui.screens.LevelSelectUI">
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image id="earth" filename="Interface/Screens/menu/probe.png" align="center" valign="center" x="30%" y="10%" height="40%" width="40%">
+                    <interact onClick=""/> 	
+                </image>
+            </panel>
+        </layer>
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Textures/Levels/earth/720.png" align="center" valign="center" x="10%" y="65%" height="10%" width="10%">
+                    <interact onClick="setEarth(720)" onMouseOver="changeEarthImage(720)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/earth/water.png" align="center" valign="center" x="33%" y="65%" height="10%" width="10%">
+                    <interact onClick="setEarth(water)" onMouseOver="changeEarthImage(water)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Textures/Levels/earth/fire.png" align="center" valign="center" x="56%" y="65%" height="10%" width="10%">
+                    <interact onClick="setEarth(fire)" onMouseOver="changeEarthImage(fire)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/earth/water2.png" align="center" valign="center" x="79%" y="65%" height="10%" width="10%">
+                    <interact onClick="setEarth(water2)" onMouseOver="changeEarthImage(water2)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+			
+        <layer childLayout="center"	backgroundColor="#1110">
+            <panel childLayout="absolute" align="center" valign="center" visibleToMouse="true" >
+                <image filename="Textures/Levels/earth/bluefire.png" align="center" valign="center" x="10%" y="80%" height="10%" width="10%">
+                    <interact onClick="setEarth(bluefire)" onMouseOver="changeEarthImage(bluefire)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/earth/bluefire2.png" align="center" valign="center" x="33%" y="80%" height="10%" width="10%">
+                    <interact onClick="setEarth(bluefire2)" onMouseOver="changeEarthImage(bluefire2)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+                <image filename="Textures/Levels/earth/bluefire3.png" align="center" valign="center" x="56%" y="80%" height="10%" width="10%">
+                    <interact onClick="setEarth(bluefire3)" onMouseOver="changeEarthImage(bluefire3)"/> 	
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>	
+                </image>
+                <image filename="Textures/Levels/sky/spheresky.png" align="center" valign="center" x="79%" y="80%" height="10%" width="10%">
+                    <interact onClick="setEarth(spheresky)" onMouseOver="changeEarthImage(spheresky)"/> 
+                    <effect>
+                        <onHover name="imageSize" />
+                    </effect>		
+                </image>
+            </panel>
+        </layer>
+			
+    </screen>
+</nifty>

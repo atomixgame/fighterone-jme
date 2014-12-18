@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
+
+    <useStyles filename="nifty-default-styles.xml" />
+    <useStyles filename="Interface/Styles/ScifiStyle1/scifi-default-styles.xml" />
+    <useControls filename="nifty-default-controls.xml"/>
+    <registerSound id="hover2" filename="Sounds/GUI/Tick/tapp2.wav"/>
+    <registerSound id="click2" filename="Sounds/GUI/Tick/tapper 4.wav"/>
+    <style id="defaultFont">
+        <attributes  font="aurulent-sans-16.fnt" color="#ffff"  />
+    </style>
+    <style id="defaultFontBig">
+        <attributes font="Interface/Fonts/SciFied.fnt" color="#ff2f"  />
+    </style>
+    <style id="ActionStyle">
+        <effect>
+            <onStartHover name="playSound" sound="hover2" />
+            <onClick name="playSound" sound="click2" />
+        </effect>
+    </style>
+    <screen id="InGameScreen" controller="sg.games.lastblood.ui.screens.UIInGameScreen">
+        
+        <layer id="layer" childLayout="center">
+            <panel id="panel" height="100%" width="100%" align="center" valign="center" childLayout="vertical" visibleToMouse="false">
+                <panel height="20%" width="100%" id="TopPanel" align="center" valign="top" childLayout="horizontal">
+                    <panel id="characterFaces" height="120px" width="100%" childLayout="horizontal">
+                        <panel id="Player1Face" height="120px" width="10%" backgroundImage="Interface/Images/Faces/Ttt2alisa.png"  visibleToMouse="true">
+                            
+                        </panel>
+                        <panel height="120px" width="80%" id="TimePanel" align="center" valign="top" childLayout="center" backgroundImage="Interface/Screens/InGame/Header.png">
+                            <effect>
+                                <onStartScreen name="move" mode="in" direction="top" length="300" startDelay="0" inherit="true"/>
+                                <onEndScreen name="move" mode="out" direction="bottom" length="300" startDelay="0" inherit="true"/>
+                        
+                            </effect>
+                            <text padding="5px,10px,0px,15px" id="Time" style="defaultFontBig" color="#fffa" text="00 : 10" align="center" valign="bottom" />
+
+                        </panel>
+                        <panel id="Player2Face" height="120px" width="10%" backgroundImage="Interface/Images/Faces/Ttt2baek.png"  visibleToMouse="true">
+                            
+                        </panel>
+                    </panel>
+
+                </panel>
+            </panel>
+        </layer>
+        <layer height="80%" width="80%" id="layer2" childLayout="center">
+            <image align="center" valign="center" filename="Interface/Screens/InGame/Images/versus3.png" >
+                <effect>
+                    <!--<onStartScreen  name="playSound" sound="cinematichit" startDelay="300"/>-->
+                    <onStartScreen  name="fade" startColor="#0000" endColor="#000f" length="500" startDelay="300"/>
+                    <onStartScreen  name="imageSize" startSize="3.0" endSize="1" length="500" startDelay="300" />   
+                    <onStartScreen  name="fade" startColor="#000f" endColor="#0000" length="200" startDelay="3000"  neverStopRendering="true"/>
+                    <onStartScreen  name="imageSize" startSize="1" endSize="1.2" length="100" startDelay="3000"   neverStopRendering="true"/>   
+                </effect>
+            </image>
+        </layer>
+        <layer id="layer" backgroundColor="#0000" childLayout="vertical">
+            <panel childLayout="vertical" height="30%" width="100%" align="center">
+            </panel>  
+            <panel childLayout="vertical" height="40%" width="100%" align="center">
+                <effect>
+                    <onStartScreen name="move" mode="in" direction="top" length="300" startDelay="0" inherit="true"/>
+                    <onEndScreen name="move" mode="out" direction="bottom" length="300" startDelay="0" inherit="true" neverStopRendering="true"/>
+                </effect>
+                <interact onClick="startMatch()"/>    
+                
+                <panel childLayout="horizontal" height="80%" align="left" >
+                    <panel childLayout="vertical" width="50%" height="100%" align="left" >
+                        <effect>
+                            <onStartScreen name="move" mode="in" direction="left" length="300" startDelay="0" inherit="true"/>
+                            <onStartScreen name="move" mode="out" direction="left" length="200" startDelay="2000"  neverStopRendering="true"/>
+                            <!--<onStartScreen  name="playSound" sound="cinematichit" startDelay="300"/>-->
+                            <onStartScreen  name="fade" startColor="#0000" endColor="#000f" length="500" startDelay="300"/>
+                            <onStartScreen  name="imageSize" startSize="3.0" endSize="1" length="500" startDelay="300" />   
+                            <onStartScreen  name="fade" startColor="#000f" endColor="#0000" length="200" startDelay="2000"  neverStopRendering="true"/>
+                            <onStartScreen  name="imageSize" startSize="1" endSize="1.2" length="100" startDelay="2000"   neverStopRendering="true"/>   
+                        </effect>
+                        <panel childLayout="center" height="80%" width="50%" align="center" >
+                            <image id="player1_Logo" width="75%" height="90%" filename = "Interface/Images/Body/collection1/alisa.png"/>
+                        </panel>
+                        <text id="player1_Name" text="Kamar" align="center" textAlign="center" style="defaultFontBig" height="20%" color="#000f"/>
+                    </panel>
+                    <panel childLayout="vertical" width="50%" height="100%" align="left" >
+                        <effect>
+                            <onStartScreen name="move" mode="in" direction="right" length="300" startDelay="0" inherit="true"/>
+                            <onStartScreen name="move" mode="out" direction="right" length="200" startDelay="2000"  neverStopRendering="true"/>
+                            <!--<onStartScreen  name="playSound" sound="cinematichit" startDelay="300"/>-->
+                            <onStartScreen  name="fade" startColor="#0000" endColor="#000f" length="500" startDelay="300"/>
+                            <onStartScreen  name="imageSize" startSize="3.0" endSize="1" length="500" startDelay="300" />   
+                            <onStartScreen  name="fade" startColor="#000f" endColor="#0000" length="200" startDelay="2000"  neverStopRendering="true"/>
+                            <onStartScreen  name="imageSize" startSize="1" endSize="1.2" length="100" startDelay="2000"   neverStopRendering="true"/>   
+                        </effect>
+                        <panel childLayout="center" height="80%" width="50%" align="center" >
+                            <image id="player2_Logo" width="75%" height="90%" filename = "Interface/Images/Body/collection1/christie.png"/>
+                        </panel>
+                        <text id="player2_Name" text="Tiger" align="center" textAlign="center" style="defaultFontBig" height="20%" color="#000f"/>
+                    </panel>
+                </panel>
+            </panel>
+        </layer>
+    </screen>
+</nifty>

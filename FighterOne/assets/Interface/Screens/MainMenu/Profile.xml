@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd">
+  <!-- +++++++++++++++++++++++++++++++++++++++ -->
+  <!-- start screen -->
+  <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <useStyles filename="nifty-default-styles.xml" />
+    <useStyles filename="Interface/Styles/Style/scifi.xml" />
+    <useControls filename="nifty-default-controls.xml"/>
+    <style id="defaultFont">
+        <attributes  font="aurulent-sans-16.fnt" color="#ffff"  />
+    </style>
+    <style id="defaultFontBig">
+        <attributes font="Interface/Fonts/SciFied.fnt" color="#ff2f"  />
+    </style>
+    <screen id="start" controller="mygame.Main">
+        <layer id="layer" backgroundColor="#003f" childLayout="center">
+            <panel id="panel" style="scifi-panel" height="85%" width="85%" align="center" valign="center" childLayout="vertical" visibleToMouse="true">
+                <interact onClick="quit()"/>
+                <effect>
+                    <onStartScreen name="move" mode="in" direction="top" length="300" startDelay="0" inherit="true"/>
+                    <onEndScreen name="move" mode="out" direction="bottom" length="300" startDelay="0" inherit="true"/>
+                </effect>
+                <text id="label1" style="defaultFontBig" width="50%" text="Profile create" align="left" valign="center" textAlign="left" />
+                <panel id="List" width="100%" height="100%" childLayout="vertical">
+                    <panel id="row1" height="24px" width="100%" align="center" valign="center" childLayout="horizontal" padding="4px">
+                        <text id="label1" style="defaultFont" width="20%" text="Name" align="left" valign="center" textAlign="left" />
+                        <control id="name" name="textfield" width="50%" text="Atomix" align="right" valign="center" />
+                    </panel>  
+                    <panel id="row1" height="24px" width="100%" align="center"  valign="center" childLayout="horizontal" padding="4px">
+                        <text id="label1" style="defaultFont" width="20%" text="Speed" align="left" valign="center" textAlign="left" />
+                        <control id="sliderH" name="horizontalSlider" width="100px" />
+                    </panel>  
+
+                    <panel id="row1" height="24px" width="100%" align="center" valign="center" childLayout="horizontal" padding="4px">
+                        <text id="label1" style="defaultFont" width="20%" text="Type" align="left" valign="center" textAlign="left" />
+                        <control id="dropDown2" name="dropDown" />
+                    </panel>  
+                    <panel id="row1" width="100%" align="center" valign="center" childLayout="horizontal" padding="4px">
+                        <text id="label1" style="defaultFont" width="20%" text="Type" align="left" valign="center" textAlign="left" />
+                        <control id="myListBox" name="listBox" vertical="optional" horizontal="optional" displayItems="4" selection="Multiple" />
+                    </panel>  
+                </panel>
+
+                <text id="text" font="aurulent-sans-16.fnt" color="#000f" text="Hello World!" align="center" valign="center" />
+            </panel>
+        </layer>
+    </screen>
+</nifty>

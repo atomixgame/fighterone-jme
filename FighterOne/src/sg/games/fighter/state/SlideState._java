@@ -1,0 +1,165 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package sg.games.fighter.state;
+
+import com.jme3.app.Application;
+import com.jme3.app.state.AbstractAppState;
+import com.jme3.app.state.AppStateManager;
+import com.jme3.asset.AssetManager;
+import com.jme3.font.BitmapFont;
+import com.jme3.font.BitmapText;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Node;
+import com.jme3.ui.Picture;
+import sg.games.fighter.core.io.TextLineLoader;
+import sg.games.fighter.managers.StageManager;
+import java.util.ArrayList;
+import java.util.logging.Logger;
+import sg.games.fighter.main.FighterMain;
+
+/**
+ *
+ * @author cuong.nguyenmanh2
+ */
+public class SlideState extends AbstractAppState {
+
+    private FighterMain app;
+    private Node rootNode;
+    private AssetManager assetManager;
+    private AppStateManager stateManager;
+    private UILoadingScreen guiController;
+    private GameStateManager gameStateManager;
+    private StageManager stageManager;
+    private GameGUIManager gameGUIManager;
+    Logger logger = Logger.getLogger(GameLoadingState.class.getName());
+    // Attributes
+    private Material bgMat;
+    private Picture backgroundPicture;
+    private boolean staticBg = false;
+    private float leterTime;
+    private BitmapFont guiFont;
+    private BitmapText hudText;
+    private int index = 0;
+    private ArrayList<String> input;
+
+    @Override
+    public void initialize(AppStateManager stateManager, Application app) {
+        super.initialize(stateManager, app);
+        this.app = (FighterMain) app; // can cast Application to something more specific
+
+        this.rootNode = this.app.getRootNode();
+        this.assetManager = this.app.getAssetManager();
+        this.stateManager = this.app.getStateManager();
+        this.gameStateManager = (GameStateManager) this.app.getGameStateManager();
+
+        if (this.app.getGameGUIManager() == null) {
+            this.app.initGUI();
+        }
+        this.gameGUIManager = this.app.getGameGUIManager();
+        if (this.app.getStageManager() == null) {
+            this.app.initStage();
+        }
+        this.stageManager = (StageManager) this.app.getStageManager();
+        setEnabled(true);
+
+    }
+
+    void initBackground() {
+        bgMat = assetManager.loadMaterial("Materials/Slide/SlideMat.j3m");
+        backgroundPicture = new Picture("background");
+        backgroundPicture.setMaterial(bgMat);
+        backgroundPicture.setWidth(app.getSettings().getWidth());
+        backgroundPicture.setHeight(app.getSettings().getHeight());
+        backgroundPicture.setPosition(0, 0);
+
+        backgroundPicture.updateGeometricState();
+
+        ViewPort pv = app.getRenderManager().createPreView("background", app.getCamera());
+        pv.setClearFlags(true, true, true);
+        pv.attachScene(backgroundPicture);
+
+        app.getViewPort().setClearFlags(false, true, true);
+        backgroundPicture.updateGeometricState();
+
+
+    }
+
+    void createText() {
+        /*
+         assetManager.registerLoader(TextLoader.class, "txt");
+         String description = (String) assetManager.loadAsset("Scenes/WorldWar/Level1/Description.txt");
+         System.out.println(description);
+         */
+        assetManager.registerLoader(TextLineLoader.class, "txt");
+        input = (ArrayList<String>) assetManager.loadAsset("Scenes/WorldWar/Level1/Description.txt");
+
+        guiFont = assetManager.loadFont("Interface/Fonts/Counter-Strike.fnt");
+        hudText = new BitmapText(guiFont, false);
+        hudText.setSize(guiFont.getCharSet().getRenderedSize());      // font size
+        hudText.setColor(ColorRGBA.White);                             // font color
+        hudText.setText(input.get(index));             // the text
+        hudText.setLocalTranslation(300, 400, 0); // position
+        gameGUIManager.getGuiNode().attachChild(hudText);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+
+        if (enabled) {
+            simpleInitApp();
+        } else {
+        }
+    }
+
+    public void simpleInitApp() {
+        // LEVEL
+        initBackground();
+        createText();
+        // STAGE
+        //initNiftyGUI();
+        /*
+         tgui = new MainScreenTGUI(this);
+         tgui.initToneGodGUI();
+         */
+        setupCamera();
+        setupInput();
+    }
+
+    void setupCamera() {
+        app.getViewPort().setBackgroundColor(ColorRGBA.LightGray);
+        app.setDisplayStatView(false);
+        app.getFlyByCamera().setDragToRotate(true);
+
+        app.getCamera().setLocation(new Vector3f(0, 3, 5));
+        app.getCamera().lookAt(new Vector3f(0, 2, 0), Vector3f.UNIT_Y);
+    }
+
+    void setupInput() {
+        app.getInputManager().setCursorVisible(true);
+
+        //Add actions
+
+        app.getInputManager().addMapping("NextSlide", new KeyTrigger(KeyInput.KEY_SPACE));
+        app.getInputManager().addListener(actionListener, "NextSlide");
+
+    }
+    ActionListener actionListener = new ActionListener() {
+        public void onAction(String name, boolean isPressed, float tpf) {
+            if (name.equals("NextSlide")) {
+                if (index < input.size()) {
+                    hudText.setText(input.get(index));
+                    index++;
+                }
+            }
+        }
+    };
+}
