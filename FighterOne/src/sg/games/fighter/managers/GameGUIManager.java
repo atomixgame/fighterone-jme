@@ -9,7 +9,6 @@ import com.jme3.ui.Picture;
 import java.util.HashMap;
 import java.util.logging.Logger;
 import sg.games.fighter.stage.FightCam;
-import sg.games.fighter.main.Config;
 import sg.games.fighter.main.FighterMain;
 
 public class GameGUIManager {
@@ -20,7 +19,6 @@ public class GameGUIManager {
      * Singleton reference of Object.
      */
     private static GameGUIManager selfRef;
-    private Config config;
     private Picture backgroundPicture;
     private Material bgMat;
     private HashMap<String, JmeCursor> cursors = new HashMap<String, JmeCursor>();

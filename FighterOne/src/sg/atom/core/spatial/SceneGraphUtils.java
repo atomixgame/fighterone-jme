@@ -10,7 +10,6 @@ import com.jme3.scene.Node;
 import com.jme3.scene.SceneGraphVisitor;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
-import com.jme3.terrain.geomipmap.TerrainQuad;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -166,32 +165,6 @@ public class SceneGraphUtils {
         }
         return null;
     }
-
-    public static TerrainQuad findTerrain(Node node) {
-        for (Spatial child : node.getChildren()) {
-            if (child instanceof TerrainQuad) {
-                return (TerrainQuad) child;
-            } else if (child instanceof Node) {
-                return findTerrain((Node) child);
-            }
-
-        }
-        return null;
-    }
-//
-//    public static GenericTerrain findGenericTerrain(Node node) {
-//        for (Spatial child : node.getChildren()) {
-//            if (child instanceof GenericTerrain) {
-//                return (GenericTerrain) child;
-//            } else if (child instanceof TerrainQuad) {
-//                return new TerrainQuadAdapter((TerrainQuad) child);
-//            } else if (child instanceof Node) {
-//                return findGenericTerrain((Node) child);
-//            }
-//
-//        }
-//        return null;
-//    }
 
     public static Geometry findFirstGeo(Spatial sp) {
         if (sp instanceof Geometry) {

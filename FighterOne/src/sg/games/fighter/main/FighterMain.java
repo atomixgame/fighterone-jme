@@ -67,8 +67,6 @@ public class FighterMain extends SimpleApplication {
     }
 
     public void lazyInit() {
-        Config.getInstance().init(getInputManager());
-        Config.getInstance().writeDefaultConfig();
     }
 
     public void initManagers() {

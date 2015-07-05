@@ -81,7 +81,7 @@ public class FightCam extends AbstractAppState {
         Vector3f p1Pos = p1.mesh.getWorldTranslation();
         Vector3f p2Pos = p2.mesh.getWorldTranslation();
         distanceBetween = gamePlay.distance2d(p1Pos, p2Pos) / 2;
-        centerPoint = p1Pos.clone().interpolateLocal(p2Pos, 0.5f);
+        centerPoint = p1Pos.clone().interpolate(p2Pos, 0.5f);
         float addZ = camMinDistance + distanceBetween / FastMath.tan(viewAngle) * 1.5f;
         float addY = camMinHeight + addZ * FastMath.tan(viewHorizontalAngle);
         Vector3f newPos = centerPoint.add(0, addY, addZ * camHeight);
