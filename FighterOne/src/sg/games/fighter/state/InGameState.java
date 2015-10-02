@@ -2,6 +2,8 @@ package sg.games.fighter.state;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import java.util.logging.Logger;
 import sg.atom.core.execution.BaseGameState;
 import sg.games.fighter.main.FighterMain;
@@ -28,6 +30,7 @@ public class InGameState extends BaseGameState {
         super.setEnabled(enabled);
 
         if (enabled) {
+            getApp().getWorldManager().load();
             goInGame();
         } else {
             goOutGame();
@@ -40,7 +43,8 @@ public class InGameState extends BaseGameState {
     }
 
     protected void loadLevel(GameLevelStage currentLevel) {
-        getApp().getWorldManager().getWorldNode().attachChild(getApp().getAssetManager().loadModel(currentLevel.getPath()));
+        Spatial levelNode = getApp().getAssetManager().loadModel(currentLevel.getPath());
+        getApp().getWorldManager().getWorldNode().attachChild(levelNode);
         getApp().getGamePlayManager().startLevel(currentLevel);
     }
 

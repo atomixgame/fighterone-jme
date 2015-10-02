@@ -69,18 +69,19 @@ public class FightGamePlay extends AbstractManager {
         character1.setOpponent(character2);
         character2.setOpponent(character1);
 
-        character1.getModel().setLocalTranslation(new Vector3f(0, 0, 5));
-        character2.getModel().setLocalTranslation(new Vector3f(0, 0, -5));
+        character1.getModel().setLocalTranslation(new Vector3f(2, 0, 0));
+        character2.getModel().setLocalTranslation(new Vector3f(-2, 0, 0));
 
-        
         getApp().getWorldManager().getWorldNode().attachChild(character1.getModel());
         getApp().getWorldManager().getWorldNode().attachChild(character2.getModel());
 
         character1.lookAt(character2);
         character2.lookAt(character1);
 
+//        getApp().getCamera().setLocation(new Vector3f(0, 5, -2));
+//        getApp().getCamera().lookAt(Vector3f.ZERO, Vector3f.UNIT_Y);
         setupKeys();
-//        fightCam.setEnabled(true);
+        fightCam.setEnabled(true);
     }
 
     public void setupKeys() {

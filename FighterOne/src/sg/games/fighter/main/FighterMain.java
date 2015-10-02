@@ -33,11 +33,13 @@ public class FighterMain extends AtomMain {
     }
 
     public static void main(String[] args) {
+        DeviceSettings deviceSettings = DeviceSettings.Phone;
+        deviceSettings.setLandscape(true);
         AppSettings setting = new AppSettings(true);
         //setting.setFrameRate(60);
         setting.setTitle("Fighter One");
-        setting.setWidth(840);
-        setting.setHeight(480);
+        setting.setWidth(deviceSettings.getWidth());
+        setting.setHeight(deviceSettings.getHeight());
         FighterMain app = FighterMain.getInstance();
         app.setShowSettings(false);
         app.setSettings(setting);
