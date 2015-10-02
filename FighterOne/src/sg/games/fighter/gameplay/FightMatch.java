@@ -40,11 +40,9 @@ public class FightMatch implements ManagableObject {
     }
 
     public void init(Application app) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void initManagers(IGameCycle... managers) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

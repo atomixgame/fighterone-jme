@@ -1,7 +1,6 @@
 package sg.games.fighter.gameplay;
 
 import sg.games.fighter.stage.FightCam;
-import com.jme3.animation.LoopMode;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -9,93 +8,79 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import java.util.ArrayList;
+import java.util.List;
+import sg.atom.core.lifecycle.AbstractManager;
+import sg.atom.corex.player.Player;
 
-import sg.games.fighter.gameplay.rig.CharacterRig;
 import sg.games.fighter.main.FighterMain;
-import sg.games.fighter.world.GameLevel;
+import sg.games.fighter.world.GameLevelStage;
 
-public class FightGamePlay {
-    //stage
-    public FightCam camsystem;
+public class FightGamePlay extends AbstractManager {
+
+    protected FightCam fightCam;
     // players 
-    public FightGamePlayer player1;
-    public FightGamePlayer player2;
-    public FightCharacter character1;
-    public FightCharacter character2;
-    public String player1Name;
-    public String player2Name;
-    //singleton
-    /**
-     * Singleton reference of Object.
-     */
-    private static FightGamePlay selfRef;
-    private FightCam fightingCam;
-    private ActionListener actionListener;
-    private FightMatch currentMatch;
-    private Node levelNode;
-    private FighterMain app;
-    private GameLevel currentLevel;
+    protected Player player1;
+    protected Player player2;
+    protected FightCharacter character1;
+    protected FightCharacter character2;
+    protected String player1Name;
+    protected String player2Name;
+    protected ActionListener actionListener;
+    protected FightMatch currentMatch;
+    protected Node levelNode;
+    protected GameLevelStage currentLevel;
+    private List<FightCharacter> characters;
 
-    /**
-     * Constructs singleton instance of Object.
-     */
-    private FightGamePlay() {
-        selfRef = this;
+    public FightGamePlay(FighterMain app) {
+        super(app);
     }
 
-    private FightGamePlay(FighterMain app) {
-        this.app = app;
+    public void init() {
+        super.init();
+        this.characters = new ArrayList<FightCharacter>();
+        this.fightCam = new FightCam();
+        getApp().getStateManager().attach(fightCam);
     }
 
-    /**
-     * Provides reference to singleton object of Object.
-     *
-     * @return Singleton instance of Object.
-     */
-    public static final FightGamePlay getInstance() {
-        if (selfRef == null) {
-            selfRef = new FightGamePlay(FighterMain.getInstance());
-        }
-        return selfRef;
-    }
-    // lazy init
-
-    public void startLevel(GameLevel level) {
+    public void startLevel(GameLevelStage level) {
         this.currentLevel = level;
         startGame();
     }
 
     public void startGame() {
+        levelNode = app.getWorldManager().getWorldNode();
 
-        // Configured by StageManager?
-        app.getInputManager().setCursorVisible(false);
-        app.getFlyByCamera().setEnabled(false);
-        app.getFlyByCamera().setMoveSpeed(40);
-        app.getCamera().setLocation(new Vector3f(0, 4, 20));
-        // start game play
-        levelNode = app.getWorldManager().getLevelNode();
+        startMatch();
+    }
 
-        player1 = new FightGamePlayer(app, player1Name);
-        player2 = new FightGamePlayer(app, player2Name);
-        
-        character1 = new FightCharacter(player1);
-        character2 = new FightCharacter(player2);
+    public void startMatch() {
+        player1 = new Player(app, "player1");
+        player2 = new Player(app, "player2");
 
-        // FIXME: Create a Match!
+        //FIXME: Use EntityFactory
+        character1 = new FightCharacter();
+        character2 = new FightCharacter();
+        character1.init(getApp());
+        character2.init(getApp());
         currentMatch = new FightMatch(character1, character2);
+        characters.add(character1);
+        characters.add(character2);
+        character1.setOpponent(character2);
+        character2.setOpponent(character1);
 
-        createPlayerCharacter(character1, "p1", player1Name, new Vector3f(-2.0F, 0.0F, 0.0F));
-        createPlayerCharacter(character2, "p2", player2Name, new Vector3f(2.0F, 0.0F, 0.0F));
+        character1.getModel().setLocalTranslation(new Vector3f(0, 0, 5));
+        character2.getModel().setLocalTranslation(new Vector3f(0, 0, -5));
 
-        character1.setOponent(character2);
-        character2.setOponent(character1);
-
-//        camsystem = new FightCam();
+        
+        getApp().getWorldManager().getWorldNode().attachChild(character1.getModel());
+        getApp().getWorldManager().getWorldNode().attachChild(character2.getModel());
 
         character1.lookAt(character2);
         character2.lookAt(character1);
 
         setupKeys();
+//        fightCam.setEnabled(true);
     }
 
     public void setupKeys() {
@@ -110,7 +95,6 @@ public class FightGamePlay {
         inputManager.addMapping("p1rightKick", new KeyTrigger(KeyInput.KEY_F));
         inputManager.addMapping("p1side", new KeyTrigger(KeyInput.KEY_C));
         inputManager.addMapping("p1def", new KeyTrigger(KeyInput.KEY_X));
-
 
         inputManager.addMapping("p2left", new KeyTrigger(KeyInput.KEY_J));
         inputManager.addMapping("p2right", new KeyTrigger(KeyInput.KEY_L));
@@ -180,253 +164,251 @@ public class FightGamePlay {
     public void onHit(FightCharacter p1, FightCharacter p2, Spatial colSpatial) {
         String animName = p2.current + p1.attackWhere + p1.attackEffect;
         p1.attack = false;
-        p1.effectPosition = colSpatial.getWorldTranslation();
-        p1.placeHitEffect(p1.effectPosition);
-        // FIXME : SkillEffect
-        p2.animSpeed = 2.0F;
-        p2.current = "stand";
-        // FIXME: Get next pose from AnimBehaviorTree
-        p2.onAttacked(animName, 0.01F, p2.animSpeed, p1.dmg);
+
+//        p1.effectPosition = colSpatial.getWorldTranslation();
+//        p1.placeHitEffect(p1.effectPosition);
+//        p2.animSpeed = 2.0F;
+//        p2.current = "stand";
+//        p2.onAttacked(animName, 0.01F, p2.animSpeed, p1.dmg);
     }
 
     public void updateAllCollisionShapes() {
-        character1.updateCollisionShapes();
-        character2.updateCollisionShapes();
+//        character1.updateCollisionShapes();
+//        character2.updateCollisionShapes();
     }
     /* FIXME : Replace with collision triggers */
 
     public void collision() {
         // update the rigs 
         // update the collision groups
-        collision(character1, character2);
-        collision(character2, character1);
+//        collision(character1, character2);
+//        collision(character2, character1);
 
     }
 
-    // Replace with Collsion trigger. and collision group
-    public void collision(FightCharacter fcc1, FightCharacter fcc2) {
-        CharacterRig fc1Rig = fcc1.rig;
-        CharacterRig fc2Rig = fcc2.rig;
-        if (fcc1.attack) {
-            if ((fcc2.current.equals("highdef")) && ((fcc1.attackWhere.equals("high")) || (fcc1.attackWhere.equals("mid")))) {
-                if (fcc1.attackByWhat.equals("hand")) {
-                    if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.LH.intersects(fc2Rig.UB)) || (fc1Rig.LH.intersects(fc2Rig.LB))) {
-                        fcc1.attack = false;
-                        fcc2.animSpeed = 1.0F;
-                        fcc2.onAttacked("highdefmove", 0.01F, fcc2.animSpeed, 0.0F);
-                    } else if ((fc1Rig.RH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.UB)) || (fc1Rig.RH.intersects(fc2Rig.LB))) {
-                        fcc1.attack = false;
-                        fcc2.animSpeed = 1.0F;
-                        fcc2.onAttacked("highdefmove", 0.01F, fcc2.animSpeed, 0.0F);
-                    }
-
-                } else if (fcc1.attackByWhat.equals("foot")) {
-                    if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.LF.intersects(fc2Rig.UB)) || (fc1Rig.LF.intersects(fc2Rig.LB))) {
-                        fcc1.attack = false;
-                        fcc2.animSpeed = 1.0F;
-                        fcc2.onAttacked("highdefmove", 0.01F, fcc2.animSpeed, 0.0F);
-                    } else if ((fc1Rig.RF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.UB)) || (fc1Rig.RF.intersects(fc2Rig.LB))) {
-                        fcc1.attack = false;
-                        fcc2.animSpeed = 1.0F;
-                        fcc2.onAttacked("highdefmove", 0.01F, fcc2.animSpeed, 0.0F);
-                    }
-                }
-
-            } else if ((fcc2.current.equals("lowdef")) && (fcc1.attackWhere.equals("low"))) {
-                if (fcc1.attackWhere.equals("low")) {
-                    if (fcc1.attackByWhat.equals("hand")) {
-                        if ((fc1Rig.LH.intersects(fc2Rig.LB)) || (fc1Rig.LH.intersects(fc2Rig.LOW))) {
-                            fcc1.attack = false;
-                            fcc2.animSpeed = 1.0F;
-                            fcc2.onAttacked("lowdefmove", 0.01F, fcc2.animSpeed, 0.0F);
-                        } else if ((fc1Rig.RH.intersects(fc2Rig.LB)) || (fc1Rig.RH.intersects(fc2Rig.LOW))) {
-                            fcc1.attack = false;
-                            fcc2.animSpeed = 1.0F;
-                            fcc2.onAttacked("lowdefmove", 0.01F, fcc2.animSpeed, 0.0F);
-                        }
-                    } else if (fcc1.attackByWhat.equals("foot")) {
-                        if ((fc1Rig.LF.intersects(fc2Rig.LB)) || (fc1Rig.LF.intersects(fc2Rig.LOW))) {
-                            fcc1.attack = false;
-                            fcc2.animSpeed = 1.0F;
-                            fcc2.onAttacked("lowdefmove", 0.01F, fcc2.animSpeed, 0.0F);
-                        } else if ((fc1Rig.RF.intersects(fc2Rig.LB)) || (fc1Rig.RF.intersects(fc2Rig.LOW))) {
-                            fcc1.attack = false;
-                            fcc2.animSpeed = 1.0F;
-                            fcc2.onAttacked("lowdefmove", 0.01F, fcc2.animSpeed, 0.0F);
-                        }
-                    }
-
-                }
-
-            } else if (fcc2.current.contains("def")) {
-                if ((fcc2.current.equals("highdef")) && (fcc1.attackWhere.equals("low"))) {
-                    if (fcc1.attackByWhat.equals("hand")) {
-                        if ((fc1Rig.LH.intersects(fc2Rig.LB)) || (fc1Rig.LH.intersects(fc2Rig.LOW))) {
-                            onHit(fcc1, fcc2, fc2Rig.low);
-                        } else if ((fc1Rig.RH.intersects(fc2Rig.LB)) || (fc1Rig.RH.intersects(fc2Rig.LOW))) {
-                            onHit(fcc1, fcc2, fc2Rig.low);
-                        }
-
-                    } else if (fcc1.attackByWhat.equals("foot")) {
-                        if ((fc1Rig.LF.intersects(fc2Rig.LB)) || (fc1Rig.LF.intersects(fc2Rig.LOW))) {
-                            onHit(fcc1, fcc2, fc2Rig.low);
-                        } else if ((fc1Rig.RF.intersects(fc2Rig.LB)) || (fc1Rig.RF.intersects(fc2Rig.LOW))) {
-                            onHit(fcc1, fcc2, fc2Rig.low);
-                        }
-                    }
-                } else if ((fcc2.current.equals("lowdef")) && (fcc1.attackWhere.equals("mid"))) {
-                    if (fcc1.attackByWhat.equals("hand")) {
-                        if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.H))) {
-                            onHit(fcc1, fcc2, fc2Rig.h);
-                        }
-                    } else if (fcc1.attackByWhat.equals("foot")) {
-                        if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.H))) {
-                            onHit(fcc1, fcc2, fc2Rig.h);
-                        }
-                    }
-                }
-            } else {
-                if (fcc1.attackByWhat.equals("hand")) {
-                    if (fcc1.attackWhere.equals("high")) {
-                        if (fcc2.current.equals("stand")) {
-                            if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.H))) {
-                                onHit(fcc1, fcc2, fc2Rig.h);
-                            } else if ((fc1Rig.LH.intersects(fc2Rig.UB)) || (fc1Rig.RH.intersects(fc2Rig.UB))) {
-                                onHit(fcc1, fcc2, fc2Rig.ub);
-                            }
-
-                        } else if (fcc2.current.equals("down")) {
-                            if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.H))) {
-                                onHit(fcc1, fcc2, fc2Rig.h);
-                            }
-
-                        } else if (!fcc2.current.equals("onfloor")) {
-                            fcc2.current.equals("inair");
-                        }
-
-                    } else if (fcc1.attackWhere.equals("mid")) {
-                        if (fcc2.current.equals("stand")) {
-                            if ((fc1Rig.LH.intersects(fc2Rig.UB)) || (fc1Rig.RH.intersects(fc2Rig.UB))) {
-                                onHit(fcc1, fcc2, fc2Rig.ub);
-                            } else if ((fc1Rig.LH.intersects(fc2Rig.LB)) || (fc1Rig.RH.intersects(fc2Rig.LB))) {
-                                onHit(fcc1, fcc2, fc2Rig.lb);
-                            }
-
-                        } else if (fcc2.current.equals("down")) {
-                            if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.H))) {
-                                onHit(fcc1, fcc2, fc2Rig.h);
-                            }
-                        } else if (!fcc2.current.equals("onfloor")) {
-                            fcc2.current.equals("inair");
-                        }
-
-                    } else if (fcc1.attackWhere.equals("low")) {
-                        if (fcc2.current.equals("stand")) {
-                            if ((fc1Rig.LH.intersects(fc2Rig.RF)) || (fc1Rig.RH.intersects(fc2Rig.RF))) {
-                                onHit(fcc1, fcc2, fc2Rig.rf);
-                            } else if ((fc1Rig.LH.intersects(fc2Rig.LF)) || (fc1Rig.RH.intersects(fc2Rig.LF))) {
-                                onHit(fcc1, fcc2, fc2Rig.lf);
-                            } else if ((fc1Rig.LH.intersects(fc2Rig.LOW)) || (fc2Rig.RH.intersects(fc2Rig.LOW))) {
-                                onHit(fcc1, fcc2, fc2Rig.low);
-                            }
-
-                        } else if (fcc2.current.equals("down")) {
-                            if ((fc1Rig.LH.intersects(fc2Rig.LB)) || (fc1Rig.RH.intersects(fc2Rig.LB))) {
-                                onHit(fcc1, fcc2, fc2Rig.lb);
-                            } else if ((fc1Rig.LH.intersects(fc2Rig.UB)) || (fc1Rig.RH.intersects(fc2Rig.UB))) {
-                                onHit(fcc1, fcc2, fc2Rig.ub);
-                            } else if ((fc1Rig.LH.intersects(fc2Rig.LOW)) || (fc2Rig.RH.intersects(fc2Rig.LOW))) {
-                                onHit(fcc1, fcc2, fc2Rig.low);
-                            }
-
-                        } else if (fcc2.current.equals("onfloor")) {
-                            if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.H))) {
-                                onHit(fcc1, fcc2, fc2Rig.h);
-                            } else if ((fc1Rig.LH.intersects(fc2Rig.LB)) || (fc1Rig.RH.intersects(fc2Rig.LB))) {
-                                onHit(fcc1, fcc2, fc2Rig.lb);
-                            }
-                        } else {
-                            fcc2.current.equals("inair");
-                        }
-
-                    }
-
-                }
-
-                if (fcc1.attackByWhat.equals("foot")) {
-                    if (fcc1.attackWhere.equals("high")) {
-                        if (fcc2.current.equals("stand")) {
-                            if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.H))) {
-                                onHit(fcc1, fcc2, fc2Rig.h);
-                            } else if ((fc1Rig.LF.intersects(fc2Rig.UB)) || (fc1Rig.RF.intersects(fc2Rig.UB))) {
-                                onHit(fcc1, fcc2, fc2Rig.ub);
-                            }
-
-                        } else if (fcc2.current.equals("down")) {
-                            if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.H))) {
-                                onHit(fcc1, fcc2, fc2Rig.h);
-                            }
-
-                        } else if (!fcc2.current.equals("onfloor")) {
-                            fcc2.current.equals("inair");
-                        }
-
-                    } else if (fcc1.attackWhere.equals("mid")) {
-                        if (fcc2.current.equals("stand")) {
-                            if ((fc1Rig.LF.intersects(fc2Rig.UB)) || (fc1Rig.RF.intersects(fc2Rig.UB))) {
-                                onHit(fcc1, fcc2, fc2Rig.ub);
-                            } else if ((fc1Rig.LF.intersects(fc2Rig.LB)) || (fc1Rig.RF.intersects(fc2Rig.LB))) {
-                                onHit(fcc1, fcc2, fc2Rig.lb);
-                            }
-
-                        } else if (fcc2.current.equals("down")) {
-
-                            if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.H))) {
-                                onHit(fcc1, fcc2, fc2Rig.h);
-                            }
-                        } else if (!fcc2.current.equals("onfloor")) {
-                            fcc2.current.equals("inair");
-                        }
-
-                    } else if (fcc1.attackWhere.equals("low")) {
-                        if (fcc2.current.equals("stand")) {
-                            if ((fc1Rig.LF.intersects(fc2Rig.RF)) || (fc1Rig.RF.intersects(fc2Rig.RF))) {
-                                onHit(fcc1, fcc2, fc2Rig.rf);
-                            } else if ((fc1Rig.LF.intersects(fc2Rig.LF)) || (fc1Rig.RF.intersects(fc2Rig.LF))) {
-                                onHit(fcc1, fcc2, fc2Rig.lf);
-                            } else if ((fc1Rig.LF.intersects(fc2Rig.LOW)) || (fc1Rig.RF.intersects(fc2Rig.LOW))) {
-                                onHit(fcc1, fcc2, fc2Rig.low);
-                            }
-
-                        } else if (fcc2.current.equals("down")) {
-                            if ((fc1Rig.LF.intersects(fc2Rig.LB)) || (fc1Rig.RF.intersects(fc2Rig.LB))) {
-                                onHit(fcc1, fcc2, fc2Rig.lb);
-                            } else if ((fc1Rig.LF.intersects(fc2Rig.UB)) || (fc1Rig.RF.intersects(fc2Rig.UB))) {
-                                onHit(fcc1, fcc2, fc2Rig.ub);
-                            } else if ((fc1Rig.LF.intersects(fc2Rig.LOW)) || (fc1Rig.RF.intersects(fc2Rig.LOW))) {
-                                onHit(fcc1, fcc2, fc2Rig.low);
-                            }
-
-                        } else if (fcc2.current.equals("onfloor")) {
-                            if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.H))) {
-                                onHit(fcc1, fcc2, fc2Rig.h);
-                            } else if ((fc1Rig.LF.intersects(fc2Rig.LB)) || (fc1Rig.RF.intersects(fc2Rig.LB))) {
-                                onHit(fcc1, fcc2, fc2Rig.lb);
-                            }
-                        } else {
-                            fcc2.current.equals("inair");
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    }
-
+//    // Replace with Collsion trigger. and collision group
+//    public void collision(FightCharacter fcc1, FightCharacter fcc2) {
+//        CharacterRig fc1Rig = fcc1.rig;
+//        CharacterRig fc2Rig = fcc2.rig;
+//        if (fcc1.attack) {
+//            if ((fcc2.current.equals("highdef")) && ((fcc1.attackWhere.equals("high")) || (fcc1.attackWhere.equals("mid")))) {
+//                if (fcc1.attackByWhat.equals("hand")) {
+//                    if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.LH.intersects(fc2Rig.UB)) || (fc1Rig.LH.intersects(fc2Rig.LB))) {
+//                        fcc1.attack = false;
+//                        fcc2.animSpeed = 1.0F;
+//                        fcc2.onAttacked("highdefmove", 0.01F, fcc2.animSpeed, 0.0F);
+//                    } else if ((fc1Rig.RH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.UB)) || (fc1Rig.RH.intersects(fc2Rig.LB))) {
+//                        fcc1.attack = false;
+//                        fcc2.animSpeed = 1.0F;
+//                        fcc2.onAttacked("highdefmove", 0.01F, fcc2.animSpeed, 0.0F);
+//                    }
+//
+//                } else if (fcc1.attackByWhat.equals("foot")) {
+//                    if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.LF.intersects(fc2Rig.UB)) || (fc1Rig.LF.intersects(fc2Rig.LB))) {
+//                        fcc1.attack = false;
+//                        fcc2.animSpeed = 1.0F;
+//                        fcc2.onAttacked("highdefmove", 0.01F, fcc2.animSpeed, 0.0F);
+//                    } else if ((fc1Rig.RF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.UB)) || (fc1Rig.RF.intersects(fc2Rig.LB))) {
+//                        fcc1.attack = false;
+//                        fcc2.animSpeed = 1.0F;
+//                        fcc2.onAttacked("highdefmove", 0.01F, fcc2.animSpeed, 0.0F);
+//                    }
+//                }
+//
+//            } else if ((fcc2.current.equals("lowdef")) && (fcc1.attackWhere.equals("low"))) {
+//                if (fcc1.attackWhere.equals("low")) {
+//                    if (fcc1.attackByWhat.equals("hand")) {
+//                        if ((fc1Rig.LH.intersects(fc2Rig.LB)) || (fc1Rig.LH.intersects(fc2Rig.LOW))) {
+//                            fcc1.attack = false;
+//                            fcc2.animSpeed = 1.0F;
+//                            fcc2.onAttacked("lowdefmove", 0.01F, fcc2.animSpeed, 0.0F);
+//                        } else if ((fc1Rig.RH.intersects(fc2Rig.LB)) || (fc1Rig.RH.intersects(fc2Rig.LOW))) {
+//                            fcc1.attack = false;
+//                            fcc2.animSpeed = 1.0F;
+//                            fcc2.onAttacked("lowdefmove", 0.01F, fcc2.animSpeed, 0.0F);
+//                        }
+//                    } else if (fcc1.attackByWhat.equals("foot")) {
+//                        if ((fc1Rig.LF.intersects(fc2Rig.LB)) || (fc1Rig.LF.intersects(fc2Rig.LOW))) {
+//                            fcc1.attack = false;
+//                            fcc2.animSpeed = 1.0F;
+//                            fcc2.onAttacked("lowdefmove", 0.01F, fcc2.animSpeed, 0.0F);
+//                        } else if ((fc1Rig.RF.intersects(fc2Rig.LB)) || (fc1Rig.RF.intersects(fc2Rig.LOW))) {
+//                            fcc1.attack = false;
+//                            fcc2.animSpeed = 1.0F;
+//                            fcc2.onAttacked("lowdefmove", 0.01F, fcc2.animSpeed, 0.0F);
+//                        }
+//                    }
+//
+//                }
+//
+//            } else if (fcc2.current.contains("def")) {
+//                if ((fcc2.current.equals("highdef")) && (fcc1.attackWhere.equals("low"))) {
+//                    if (fcc1.attackByWhat.equals("hand")) {
+//                        if ((fc1Rig.LH.intersects(fc2Rig.LB)) || (fc1Rig.LH.intersects(fc2Rig.LOW))) {
+//                            onHit(fcc1, fcc2, fc2Rig.low);
+//                        } else if ((fc1Rig.RH.intersects(fc2Rig.LB)) || (fc1Rig.RH.intersects(fc2Rig.LOW))) {
+//                            onHit(fcc1, fcc2, fc2Rig.low);
+//                        }
+//
+//                    } else if (fcc1.attackByWhat.equals("foot")) {
+//                        if ((fc1Rig.LF.intersects(fc2Rig.LB)) || (fc1Rig.LF.intersects(fc2Rig.LOW))) {
+//                            onHit(fcc1, fcc2, fc2Rig.low);
+//                        } else if ((fc1Rig.RF.intersects(fc2Rig.LB)) || (fc1Rig.RF.intersects(fc2Rig.LOW))) {
+//                            onHit(fcc1, fcc2, fc2Rig.low);
+//                        }
+//                    }
+//                } else if ((fcc2.current.equals("lowdef")) && (fcc1.attackWhere.equals("mid"))) {
+//                    if (fcc1.attackByWhat.equals("hand")) {
+//                        if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.H))) {
+//                            onHit(fcc1, fcc2, fc2Rig.h);
+//                        }
+//                    } else if (fcc1.attackByWhat.equals("foot")) {
+//                        if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.H))) {
+//                            onHit(fcc1, fcc2, fc2Rig.h);
+//                        }
+//                    }
+//                }
+//            } else {
+//                if (fcc1.attackByWhat.equals("hand")) {
+//                    if (fcc1.attackWhere.equals("high")) {
+//                        if (fcc2.current.equals("stand")) {
+//                            if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.H))) {
+//                                onHit(fcc1, fcc2, fc2Rig.h);
+//                            } else if ((fc1Rig.LH.intersects(fc2Rig.UB)) || (fc1Rig.RH.intersects(fc2Rig.UB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.ub);
+//                            }
+//
+//                        } else if (fcc2.current.equals("down")) {
+//                            if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.H))) {
+//                                onHit(fcc1, fcc2, fc2Rig.h);
+//                            }
+//
+//                        } else if (!fcc2.current.equals("onfloor")) {
+//                            fcc2.current.equals("inair");
+//                        }
+//
+//                    } else if (fcc1.attackWhere.equals("mid")) {
+//                        if (fcc2.current.equals("stand")) {
+//                            if ((fc1Rig.LH.intersects(fc2Rig.UB)) || (fc1Rig.RH.intersects(fc2Rig.UB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.ub);
+//                            } else if ((fc1Rig.LH.intersects(fc2Rig.LB)) || (fc1Rig.RH.intersects(fc2Rig.LB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.lb);
+//                            }
+//
+//                        } else if (fcc2.current.equals("down")) {
+//                            if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.H))) {
+//                                onHit(fcc1, fcc2, fc2Rig.h);
+//                            }
+//                        } else if (!fcc2.current.equals("onfloor")) {
+//                            fcc2.current.equals("inair");
+//                        }
+//
+//                    } else if (fcc1.attackWhere.equals("low")) {
+//                        if (fcc2.current.equals("stand")) {
+//                            if ((fc1Rig.LH.intersects(fc2Rig.RF)) || (fc1Rig.RH.intersects(fc2Rig.RF))) {
+//                                onHit(fcc1, fcc2, fc2Rig.rf);
+//                            } else if ((fc1Rig.LH.intersects(fc2Rig.LF)) || (fc1Rig.RH.intersects(fc2Rig.LF))) {
+//                                onHit(fcc1, fcc2, fc2Rig.lf);
+//                            } else if ((fc1Rig.LH.intersects(fc2Rig.LOW)) || (fc2Rig.RH.intersects(fc2Rig.LOW))) {
+//                                onHit(fcc1, fcc2, fc2Rig.low);
+//                            }
+//
+//                        } else if (fcc2.current.equals("down")) {
+//                            if ((fc1Rig.LH.intersects(fc2Rig.LB)) || (fc1Rig.RH.intersects(fc2Rig.LB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.lb);
+//                            } else if ((fc1Rig.LH.intersects(fc2Rig.UB)) || (fc1Rig.RH.intersects(fc2Rig.UB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.ub);
+//                            } else if ((fc1Rig.LH.intersects(fc2Rig.LOW)) || (fc2Rig.RH.intersects(fc2Rig.LOW))) {
+//                                onHit(fcc1, fcc2, fc2Rig.low);
+//                            }
+//
+//                        } else if (fcc2.current.equals("onfloor")) {
+//                            if ((fc1Rig.LH.intersects(fc2Rig.H)) || (fc1Rig.RH.intersects(fc2Rig.H))) {
+//                                onHit(fcc1, fcc2, fc2Rig.h);
+//                            } else if ((fc1Rig.LH.intersects(fc2Rig.LB)) || (fc1Rig.RH.intersects(fc2Rig.LB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.lb);
+//                            }
+//                        } else {
+//                            fcc2.current.equals("inair");
+//                        }
+//
+//                    }
+//
+//                }
+//
+//                if (fcc1.attackByWhat.equals("foot")) {
+//                    if (fcc1.attackWhere.equals("high")) {
+//                        if (fcc2.current.equals("stand")) {
+//                            if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.H))) {
+//                                onHit(fcc1, fcc2, fc2Rig.h);
+//                            } else if ((fc1Rig.LF.intersects(fc2Rig.UB)) || (fc1Rig.RF.intersects(fc2Rig.UB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.ub);
+//                            }
+//
+//                        } else if (fcc2.current.equals("down")) {
+//                            if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.H))) {
+//                                onHit(fcc1, fcc2, fc2Rig.h);
+//                            }
+//
+//                        } else if (!fcc2.current.equals("onfloor")) {
+//                            fcc2.current.equals("inair");
+//                        }
+//
+//                    } else if (fcc1.attackWhere.equals("mid")) {
+//                        if (fcc2.current.equals("stand")) {
+//                            if ((fc1Rig.LF.intersects(fc2Rig.UB)) || (fc1Rig.RF.intersects(fc2Rig.UB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.ub);
+//                            } else if ((fc1Rig.LF.intersects(fc2Rig.LB)) || (fc1Rig.RF.intersects(fc2Rig.LB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.lb);
+//                            }
+//
+//                        } else if (fcc2.current.equals("down")) {
+//
+//                            if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.H))) {
+//                                onHit(fcc1, fcc2, fc2Rig.h);
+//                            }
+//                        } else if (!fcc2.current.equals("onfloor")) {
+//                            fcc2.current.equals("inair");
+//                        }
+//
+//                    } else if (fcc1.attackWhere.equals("low")) {
+//                        if (fcc2.current.equals("stand")) {
+//                            if ((fc1Rig.LF.intersects(fc2Rig.RF)) || (fc1Rig.RF.intersects(fc2Rig.RF))) {
+//                                onHit(fcc1, fcc2, fc2Rig.rf);
+//                            } else if ((fc1Rig.LF.intersects(fc2Rig.LF)) || (fc1Rig.RF.intersects(fc2Rig.LF))) {
+//                                onHit(fcc1, fcc2, fc2Rig.lf);
+//                            } else if ((fc1Rig.LF.intersects(fc2Rig.LOW)) || (fc1Rig.RF.intersects(fc2Rig.LOW))) {
+//                                onHit(fcc1, fcc2, fc2Rig.low);
+//                            }
+//
+//                        } else if (fcc2.current.equals("down")) {
+//                            if ((fc1Rig.LF.intersects(fc2Rig.LB)) || (fc1Rig.RF.intersects(fc2Rig.LB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.lb);
+//                            } else if ((fc1Rig.LF.intersects(fc2Rig.UB)) || (fc1Rig.RF.intersects(fc2Rig.UB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.ub);
+//                            } else if ((fc1Rig.LF.intersects(fc2Rig.LOW)) || (fc1Rig.RF.intersects(fc2Rig.LOW))) {
+//                                onHit(fcc1, fcc2, fc2Rig.low);
+//                            }
+//
+//                        } else if (fcc2.current.equals("onfloor")) {
+//                            if ((fc1Rig.LF.intersects(fc2Rig.H)) || (fc1Rig.RF.intersects(fc2Rig.H))) {
+//                                onHit(fcc1, fcc2, fc2Rig.h);
+//                            } else if ((fc1Rig.LF.intersects(fc2Rig.LB)) || (fc1Rig.RF.intersects(fc2Rig.LB))) {
+//                                onHit(fcc1, fcc2, fc2Rig.lb);
+//                            }
+//                        } else {
+//                            fcc2.current.equals("inair");
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
     public boolean isOutOfRing(String id) {
         //FIXME: use the level.
         /*
@@ -441,10 +423,10 @@ public class FightGamePlay {
 
     public void doOutOfRing(FightCharacter p1) {
         //p1.patch();
-        p1.controlable = false;
-        p1.currentHealth = 0.0F;
-        p1.animChannel.setAnim("OUT", 0.01F);
-        p1.animChannel.setLoopMode(LoopMode.DontLoop);
+//        p1.controlable = false;
+//        p1.currentHealth = 0.0F;
+//        p1.animChannel.setAnim("OUT", 0.01F);
+//        p1.animChannel.setLoopMode(LoopMode.DontLoop);
         //setHealthBar(character1, currentBar1, healthBar1);
     }
 
@@ -459,19 +441,19 @@ public class FightGamePlay {
     }
 
     public void doWinLose(FightCharacter fc, String animName) {
-        fc.audioSend = true;
-        fc.audioName = "audioWin";
+//        fc.audioSend = true;
+//        fc.audioName = "audioWin";
         //audioR.playSource(fc.audioWin);
-        fc.animChannel.setAnim(animName);
-        fc.animChannel.setLoopMode(LoopMode.DontLoop);
+//        fc.animChannel.setAnim(animName);
+//        fc.animChannel.setLoopMode(LoopMode.DontLoop);
     }
 
     public void doKO(FightCharacter p1, String animName) {
         //audioR.playSource(character1.audioKO);
-        p1.animSpeed = 1.0F;
-        p1.animChannel.setAnim(animName);
-        p1.animChannel.setLoopMode(LoopMode.DontLoop);
-        p1.animChannel.setSpeed(p1.animSpeed);
+//        p1.animSpeed = 1.0F;
+//        p1.animChannel.setAnim(animName);
+//        p1.animChannel.setLoopMode(LoopMode.DontLoop);
+//        p1.animChannel.setSpeed(p1.animSpeed);
     }
 
     /**
@@ -480,46 +462,46 @@ public class FightGamePlay {
     public void winLose() {
         //main.ingame = false;
 
-        if ((character1.animChannel.getAnimationName().equals("OUT")) && (!character2.animChannel.getAnimationName().equals("OUT"))) {
-            if (character2.currentHealth <= 10.0F) {
-                doWinLose(character2, "greatwin");
-            } else if (character2.currentHealth == 100.0F) {
-                doWinLose(character2, "perfectwin");
-            } else if ((character2.currentHealth > 10.0F) && (character2.currentHealth < 100.0F)) {
-                doWinLose(character2, "normalwin");
-            }
-        } else if ((!character1.animChannel.getAnimationName().equals("OUT")) && (character2.animChannel.getAnimationName().equals("OUT"))) {
-            if (character1.currentHealth <= 10.0F) {
-                doWinLose(character1, "greatwin");
-            } else if (character1.currentHealth == 100.0F) {
-                doWinLose(character1, "perfectwin");
-            } else if ((character1.currentHealth > 10.0F) && (character1.currentHealth < 100.0F)) {
-                doWinLose(character1, "normalwin");
-            }
-        } else if ((!character1.animChannel.getAnimationName().equals("OUT")) || (!character2.animChannel.getAnimationName().equals("OUT"))) {
-            if ((character1.currentHealth <= 0.0F) && (character2.currentHealth > 0.0F)) {
-                doKO(character1, "KO");
-                if (character2.currentHealth <= 10.0F) {
-                    doWinLose(character2, "greatwin");
-                } else if (character2.currentHealth == 100.0F) {
-                    doWinLose(character2, "perfectwin");
-                } else if ((character2.currentHealth > 10.0F) && (character2.currentHealth < 100.0F)) {
-                    doWinLose(character2, "normalwin");
-                }
-            } else if ((character2.currentHealth <= 0.0F) && (character1.currentHealth > 0.0F)) {
-                doKO(character2, "KO");
-                if (character1.currentHealth <= 10.0F) {
-                    doWinLose(character1, "greatwin");
-                } else if (character1.currentHealth == 100.0F) {
-                    doWinLose(character1, "perfectwin");
-                } else if ((character1.currentHealth > 10.0F) && (character1.currentHealth < 100.0F)) {
-                    doWinLose(character1, "normalwin");
-                }
-            } else {
-                doKO(character1, "KO");
-                doKO(character2, "KO");
-            }
-        }
+//        if ((character1.animChannel.getAnimationName().equals("OUT")) && (!character2.animChannel.getAnimationName().equals("OUT"))) {
+//            if (character2.currentHealth <= 10.0F) {
+//                doWinLose(character2, "greatwin");
+//            } else if (character2.currentHealth == 100.0F) {
+//                doWinLose(character2, "perfectwin");
+//            } else if ((character2.currentHealth > 10.0F) && (character2.currentHealth < 100.0F)) {
+//                doWinLose(character2, "normalwin");
+//            }
+//        } else if ((!character1.animChannel.getAnimationName().equals("OUT")) && (character2.animChannel.getAnimationName().equals("OUT"))) {
+//            if (character1.currentHealth <= 10.0F) {
+//                doWinLose(character1, "greatwin");
+//            } else if (character1.currentHealth == 100.0F) {
+//                doWinLose(character1, "perfectwin");
+//            } else if ((character1.currentHealth > 10.0F) && (character1.currentHealth < 100.0F)) {
+//                doWinLose(character1, "normalwin");
+//            }
+//        } else if ((!character1.animChannel.getAnimationName().equals("OUT")) || (!character2.animChannel.getAnimationName().equals("OUT"))) {
+//            if ((character1.currentHealth <= 0.0F) && (character2.currentHealth > 0.0F)) {
+//                doKO(character1, "KO");
+//                if (character2.currentHealth <= 10.0F) {
+//                    doWinLose(character2, "greatwin");
+//                } else if (character2.currentHealth == 100.0F) {
+//                    doWinLose(character2, "perfectwin");
+//                } else if ((character2.currentHealth > 10.0F) && (character2.currentHealth < 100.0F)) {
+//                    doWinLose(character2, "normalwin");
+//                }
+//            } else if ((character2.currentHealth <= 0.0F) && (character1.currentHealth > 0.0F)) {
+//                doKO(character2, "KO");
+//                if (character1.currentHealth <= 10.0F) {
+//                    doWinLose(character1, "greatwin");
+//                } else if (character1.currentHealth == 100.0F) {
+//                    doWinLose(character1, "perfectwin");
+//                } else if ((character1.currentHealth > 10.0F) && (character1.currentHealth < 100.0F)) {
+//                    doWinLose(character1, "normalwin");
+//                }
+//            } else {
+//                doKO(character1, "KO");
+//                doKO(character2, "KO");
+//            }
+//        }
     }
 
     public void update(float tpf) {
@@ -528,8 +510,16 @@ public class FightGamePlay {
          */
     }
 
-    public void createPlayerCharacter(FightCharacter character, String id, String modelPath, Vector3f pos) {
-        character.initCharacter(id);
-        character.attachCharacter(pos);
+    public void createPlayerCharacter(FightCharacter character, String modelPath, Vector3f pos) {
+//        character.init();
+    }
+
+    public List<FightCharacter> getCharacters() {
+        return characters;
+    }
+
+    @Override
+    public FighterMain getApp() {
+        return (FighterMain) super.getApp();
     }
 }

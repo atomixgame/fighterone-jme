@@ -20,7 +20,7 @@ import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 import org.apache.commons.configuration.Configuration;
 import sg.games.fighter.main.FighterMain;
-import sg.games.fighter.world.GameLevel;
+import sg.games.fighter.world.GameLevelStage;
 
 /**
  *
@@ -32,7 +32,7 @@ public class WorldManager {
     protected PssmShadowRenderer pssmRenderer;
     private ActionListener actionListener;
     private Node levelNode;
-    private GameLevel currentLevel;
+    private GameLevelStage currentLevel;
     private FighterMain app;
     private final Node worldNode;
 
@@ -232,15 +232,15 @@ public class WorldManager {
         app.getRootNode().attachChild(worldNode);
     }
     
-    public GameLevel getCurrentLevel() {
-        return (GameLevel) currentLevel;
+    public GameLevelStage getCurrentLevel() {
+        return (GameLevelStage) currentLevel;
     }
 
     public Node getLevelNode() {
         return levelNode;
     }
 
-    public void loadLevel(GameLevel level) {
+    public void loadLevel(GameLevelStage level) {
         levelNode = new Node();
         levelNode.attachChild(app.getAssetManager().loadModel(level.getPath()));
         this.currentLevel = level;
